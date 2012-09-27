@@ -1,0 +1,68 @@
+html { font-size:62.5%; }
+h1 { font-size:4rem; line-height:1.1em; margin:35px 10px 0 25px; }
+p { font-size:1.6rem; line-height:1.2em; margin:1em 10px 0 28px; }
+
+body{
+	background:#FCDCE2;
+	font-size:10pt;
+}
+#container{
+	width:375px;
+	padding:25px 10px 10px 10px;
+	margin:auto;
+	text-align:center;
+	}
+.tweetContainer{
+	height:1%;
+	overflow:hidden;
+}
+.tweetContainer+.tweetContainer{
+	margin-top:15px;
+	border-top:1px dotted #C4354F;
+	padding-top:15px;
+}
+.tweet{
+	background:#eee;
+	border-radius:10px;
+	-webkit-border-radius:10px;
+	-moz-border-radius:10px;
+	border:1px solid transparent;
+	margin: 0 0 8px 0;
+	padding:6px;
+	padding-left:38px;
+	padding-right:15px;
+	text-indent:-31px;
+	width:320px;
+	font-size:22pt;
+	text-align:left;
+}
+.startQuote{
+display:inline;
+font-family:garamond, serif;
+font-weight:bold;
+margin:0px 10px 0px 0px;
+padding:0px;
+}
+.author{
+	width:130px;
+	float:right;
+	text-align:right;
+	font-size:12pt;
+}
+.author a, .meta a{
+	color:#C4354F;
+	text-decoration:none;
+	border-bottom:1px dotted #C4354F;	
+}
+.author img{
+	width:50px;
+	height:50px;
+	margin:5px 0 0 0;
+}
+.meta{
+	float:left;
+	text-align:left;
+	width:200px;
+	padding-left:3px;
+	}
+

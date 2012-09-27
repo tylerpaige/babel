@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>This is It</title>
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/style.css">
+		<script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
+		<script>
+			$(function() { //wait until the page is loaded
+				console.log('start');
+			});
+			var data;
+			$.ajax({
+				url: 'http://search.twitter.com/search.json?q=%E3%82%B7%2C%20OR%20%E3%81%A3%2C%20OR%20%E3%83%8F%2C%20OR%20%E3%81%A1%2C%20OR%20(%E0%AB%80%2C%20OR%20%E3%81%93%2C%20OR%20%E0%B1%AA%2C%20OR%20%E2%97%9E%E0%B8%B4%2C%20OR%20%E2%97%9F%E0%B8%B4%2C%20OR%20%E2%9A%97%E0%B8%B1%20lang%3Aen&rpp=1',
+				dataType:'jsonp',
+				success:function(response) {
+					console.log(response);
+					var results = response.results;
+					console.log(results);
+					$.each(results, function(index, value) {
+						var tweet = value.text;
+						window.originalID = value.id;
+						var author = value.from_user;
+						var avatar = value.profile_image_url;
+						var tweetblock = "<section class='tweetContainer'><div class='tweet'><h1 class='startQuote'>&quot;</h1>" + tweet + "</div><div class='author'><a href='http://twitter.com/" + author + "'>" + author + "</a><br/><img src='" + avatar + "' /></section>";
+						$('#container').append(tweetblock);
+					});	
+				},
+				error: function(){
+					console.log("Something went wrong, no tweets were found");
+				}
+			});
+			//Get user selected text
+			if(!window.twitter){
+				twitter = {};
+			}
+			twitter.selector = {};
+			twitter.selector.getSelected = function() {
+			    var highlight = '';
+			    if (window.getSelection) {
+			    	highlight = window.getSelection();
+					highlight = '"'+highight+'"';
+					return highlight;
+			    } else if (document.getSelection) {
+			        highlight = document.getSelection();
+				highlight = '"'+highight+'"';
+					return highlight;
+				} else if (document.selection) {
+			        highlight = document.selection.createRange().text;
+					highlight = '"'+highight+'"';
+					return highlight;
+				}
+			    else return;
+			};
+			twitter.selector.mouseup = function(){
+				var st= twitter.selector.getSelected();
+				if(st!=''){
+					$.ajax({
+						url: 'http://search.twitter.com/search.json?q='+st+'%20lang%3Aen',
+						//where original tweet (window.originalID) is omitted
+						dataType:'jsonp',
+						success:function(response) {
+							console.log(response);
+							var results = response.results;
+							console.log(results);
+							$.each(results, function(index, value) {
+								var tweet = value.text;
+								var author = value.from_user;
+								var avatar = value.profile_image_url;
+								var newID = value.id;
+								var tweetblock = "<section class='tweetContainer'><div class='tweet'><h1 class='startQuote'>&quot;</h1>" + tweet + "</div><div class='author'><a href='http://twitter.com/" + author + "'>" + author + "</a><br/><img src='" + avatar + "' /></section>";
+								if(newID !== window.originalID){
+									$('#container').append(tweetblock);
+									//$('.tweetContainer').replaceWith(tweetblock);
+								}
+							});	
+						},
+						error: function(){
+							console.log("Something went wrong, no tweets were found");
+						}
+					});
+				}
+			};
+			$(document).ready(function() {
+				$(document).bind("mouseup", twitter.selector.mouseup);
+			});
+		</script>
+  	</head>
+	<body>
+		<div id="container">
+			
+		</div>
+	</body>
+</html>
