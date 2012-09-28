@@ -21,6 +21,7 @@ git push heroku master //where "master" is the branch you want to push
 
 
 //PROJECT DESCRIPTION
+---> Working title: "Babel" 
 Appropriating non-Latin characters (eg: Japanese, Thai, Chinese characters), some tweets
 create images to express something. The characters are abstracted from their literal 
 meaning and are given a new meaning based solely on imagery. Thus, a new language is
@@ -40,4 +41,4 @@ the word, the word is rejected.
 Later, the dictionary can be viewed.
 
 This, of course, is entirely gratuitous, as there is no need for a dictionary for a
-language of this sort. (Just realized this. Fuck.)
+language of this sort. (Just realized this. Fuck.) 
