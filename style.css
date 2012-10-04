@@ -1,0 +1,28 @@
+html {
+		background image: url(images/foliage.png);
+	}
+
+body { 
+		background-image:url(images/sunlight.png);
+		background-repeat:repeat-x;
+		margin:0;
+	}
+	
+.forest {
+		width:700px;
+		background-image:url(images/tiger.png);
+		background-repeat:no-repeat;
+		background-position:bottom right;
+		padding-right:650px;
+	}
+	
+.layers {
+		border: 1px dotted white;
+		height: 170px;
+	}
+	
+.bird {
+		width:50px;
+		height:50px;
+		background-image:url(images/parrot.png);
+	}
