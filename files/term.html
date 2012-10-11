@@ -10,7 +10,6 @@
 			if(localStorage.twitterSearch) {//twitterSearch is a property of localStorage; can be named anything
 				var twitterData = JSON.parse(localStorage.twitterSearch),
 					formattedData = [];
-				console.log(twitterData);
 				$.each(twitterData.results, function(index, tweet) {
 					var id = tweet.id;
 					var text = tweet.text;
@@ -28,7 +27,6 @@
 						url: url
 					});
 				});
-				console.log('saved array: ', formattedData);
 				localStorage.formattedData = JSON.stringify(formattedData);
 			} else { //if the information does not exist in the cache, do this (add it, which is defined in the success property function)
 				var data;
@@ -37,16 +35,14 @@
 					dataType:'jsonp',
 					success:function(response) {//has to be called "response"
 						localStorage.twitterSearch = JSON.stringify(response); //response has to be wrapped in this to convert the object to a string
-						console.log(response);
 						var results = response.results;
-						console.log(results);
-						$.each(results, function(index, value) {
-							var tweet = value.text;
-							window.originalID = value.id;
-							var author = value.from_user;
-							var avatar = value.profile_image_url;
-							var tweetblock = "<section class='tweetContainer'><div class='tweet'><h1 class='startQuote'>&quot;</h1>" + tweet + "</div><div class='author'><a href='http://twitter.com/" + author + "'>" + author + "</a><br/><img src='" + avatar + "' /></section>";
-							$('#container').append(tweetblock);
+						$.each(results, function(index, tweet) {
+							var id = tweet.id;
+							var text = tweet.text;
+							var author = tweet.from_username;
+							var url = "http://twitter.com/"+author+"/status/"+id;
+							var term = text; //get joe to help you figure out the main term, sans context
+							$('.symbol').prepend(term);
 						});	
 					},
 					error: function(error){//should pass the actual error that was encountered
@@ -55,7 +51,8 @@
 	// 				complete:function(){//what to do when done
 	// 					console.log('done');
 	// 				})
-				});	
+				});
+		</script>
 	</head>
 	<body>
 		<navigation>
