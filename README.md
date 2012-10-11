@@ -21,7 +21,7 @@ Later, the dictionary can be viewed.
 This, of course, is entirely gratuitous, as there is no need for a dictionary for a
 language of this sort. (Just realized this. Fuck.) 
 
-<h5>Notes for creating keys at school</h5>
+<h3>Personal Notes for creating keys at school</h3>
 
 This is just a sample project to get the students in a guest lecture at Cooper Union going with GitHub and Heroku.
 
