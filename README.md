@@ -1,27 +1,5 @@
-This is just a sample project to get the students in a guest lecture at Cooper Union going with GitHub and Heroku.
 
-//Create Keys
-ssh-keygen -t rsa
-
-heroku login
-//login
-
-//Clear your previous keys
-heroku keys:clear
-heroky keys:add chose the id_rsa key
-
-//cd to the directory 
-cd ~/documents/_tcp/cooper-union-class
-
-//create new heroku instance
-heroku create
-
-//salt n peppa - push it
-git push heroku master //where "master" is the branch you want to push
-
-
-//PROJECT DESCRIPTION
----> Working title: "Babel" 
+<h2>Babel</h2>
 Appropriating non-Latin characters (eg: Japanese, Thai, Chinese characters), some tweets
 create images to express something. The characters are abstracted from their literal 
 meaning and are given a new meaning based solely on imagery. Thus, a new language is
@@ -42,3 +20,26 @@ Later, the dictionary can be viewed.
 
 This, of course, is entirely gratuitous, as there is no need for a dictionary for a
 language of this sort. (Just realized this. Fuck.) 
+
+<h5>Notes for creating keys at school</h5>
+
+This is just a sample project to get the students in a guest lecture at Cooper Union going with GitHub and Heroku.
+
+//Create Keys
+ssh-keygen -t rsa
+
+heroku login
+//login
+
+//Clear your previous keys
+heroku keys:clear
+heroky keys:add chose the id_rsa key
+
+//cd to the directory 
+cd ~/documents/_tcp/cooper-union-class
+
+//create new heroku instance
+heroku create
+
+//salt n peppa - push it
+git push heroku master //where "master" is the branch you want to push
