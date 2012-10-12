@@ -32,24 +32,17 @@
 				return -1;
 			}
 			
-			$('.delete').hide();
+			$('.x').hide();			
 			$('.definition').mouseenter(function() {
-				$('.delete').show();
+				jQuery(this).find(".x").show();
 			});
-			// $('.defImg').mouseenter(function() {
-// 				var url = $(this).attr('src'),
-// 					imgWidth = this.width,
-// 					imgHeight = this.height;
-// 			    var paper = new Raphael(document.getElementById('canvasFloat1'), imgWidth, imgHeight);
-// 			    var p1 = paper.path("M0 0L"+imgWidth+" "+imgHeight).attr({'stroke-width': 2, stroke: '#fff'});
-// 			    var p2 = paper.path("M"+imgWidth+" 0L0 "+imgHeight).attr({'stroke-width': 2, stroke: '#fff'});
-// 			});
-// 			$('.defImg').mouseleave(function() {
-// 				$('#canvasFloat1').empty();
-// 			});
-// 			$('.definition').click(function() {
-// 				$(this).remove();
-// 			});
+			$('.definition').mouseleave(function() {
+				jQuery(this).find(".x").hide();
+			});
+			$('.definition').click(function() {
+				jQuery(this).remove();
+				alert("clicked");
+			});
 		});
 		</script>
 	</head>
@@ -74,22 +67,27 @@
 				</section>
 				<ol id="defContainer">
 					<li class="definition">
-						<embed src="images/x.svg" class="delete" type="image/svg+xml" />
+						<div class="x"></div>
 						<img src="http://image.space.rakuten.co.jp/lg01/92/0000134892/28/img2f0c8fa18xzim7.jpeg" class="defImg" />
 					</li>
 					<li class="definition">
+						<div class="x"></div>
 						<img src="http://image.space.rakuten.co.jp/lg01/92/0000134892/28/img2f0c8fa18xzim7.jpeg" class="defImg" />
 					</li>
 					<li class="definition">
+						<div class="x"></div>
 						<img src="http://image.space.rakuten.co.jp/lg01/92/0000134892/28/img2f0c8fa18xzim7.jpeg" class="defImg" />
 					</li>
 					<li class="definition">
+						<div class="x"></div>
 						<img src="http://image.space.rakuten.co.jp/lg01/92/0000134892/28/img2f0c8fa18xzim7.jpeg" class="defImg" />
 					</li>
 					<li class="definition">
+						<div class="x"></div>
 						<img src="http://image.space.rakuten.co.jp/lg01/92/0000134892/28/img2f0c8fa18xzim7.jpeg" class="defImg" />
 					</li>
 					<li class="definition">
+						<div class="x"></div>
 						<img src="http://image.space.rakuten.co.jp/lg01/92/0000134892/28/img2f0c8fa18xzim7.jpeg" class="defImg" />
 					</li>
 				</ol>
