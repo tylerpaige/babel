@@ -21,6 +21,39 @@ Later, the dictionary can be viewed.
 This, of course, is entirely gratuitous, as there is no need for a dictionary for a
 language of this sort. (Just realized this. Fuck.) 
 
+<h3>Tweet Filters: Rules for what to filter out</h3>
+<ul>
+	<li>Strings of a-z characters (uppercase and lowercase) that are 2+ characters long</li>
+	<li>Strings of 0-9 numerals that are 2+ characters long</li>
+	<li>Parentheticals, quotes, & brackets that contain strings of characters/numerals as described above (ie: if the above strings are enclosed in parentheses, quotes, or brackets, remove the string and their container)</li>
+	<li>Usernames: strings of a-z 0-9 characters following an "@"</li>
+	<li>Retweet formats:
+		<ul>
+			<li>RT @___</li>
+			<li>RT @___:</li>
+			<li>RT @___: "</li>
+			<li>"@___</li>
+			<li>" @___</li>
+			<li>Probably all quotes should go (not necessarily the contents of the quotes, but the quotes themselves)</li>			
+		</ul>
+	</li>
+	<li>Links</li>
+	<li>Standard emoticons:
+		<ul>
+			<li>:) / :-)</li>
+			<li>:( / :-(</li> 
+			<li>:'(</li>
+			<li>:*</li>
+			<li>;)</li>
+			<li>;*</li>
+			<li>:o / :O</li>
+			<li>:D</li>
+			<li>D:</li>
+			<li>:p / :P</li>
+		</ul>
+	</li>
+</ul>
+
 <h3>Personal Notes for creating keys at school</h3>
 
 This is just a sample project to get the students in a guest lecture at Cooper Union going with GitHub and Heroku.
