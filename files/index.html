@@ -60,15 +60,15 @@
 			$(document).ready(function() {
 				$.each(formattedImages, function(index, value) {
 					var imgUrl = value.imgUrl,
-						defBlock = "<li><div class='x'></div><img src='"+imgUrl+"' class='defImg' /></li>";
+						defBlock = "<li><div></div><img src='"+imgUrl+"' /></li>";
 					$('#defContainer').append(defBlock);
 				});
 				$('#defContainer > li > div').hide();			
 				$('#defContainer > li').mouseenter(function() {
-					jQuery(this).find(".x").show();
+					jQuery(this).has('div').show();
 				});
 				$('#defContainer > li').mouseleave(function() {
-					jQuery(this).find(".x").hide();
+					jQuery(this).has('div').hide();
 				});
 				$('#defContainer > li').click(function() {
 					jQuery(this).remove();
