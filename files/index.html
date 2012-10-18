@@ -65,10 +65,10 @@
 				});
 				$('#defContainer > li > div').hide();			
 				$('#defContainer > li').mouseenter(function() {
-					jQuery(this).has('div').show();
+					jQuery(this).children('div').show();
 				});
 				$('#defContainer > li').mouseleave(function() {
-					jQuery(this).has('div').hide();
+					jQuery(this).children('div').hide();
 				});
 				$('#defContainer > li').click(function() {
 					jQuery(this).remove();
