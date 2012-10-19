@@ -13,7 +13,7 @@
 				$.each(twitterData.results, function(index, tweet) {
 					var id = tweet.id,
 						text = tweet.text,
-						author = tweet.from_username;
+						author = tweet.from_user;
 					window.term = tweet.text;
 					formattedData.push({ //save only the data you want
 						id: id,
