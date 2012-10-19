@@ -47,7 +47,7 @@
 				});
 				localStorage.formattedImages = JSON.stringify(formattedImages);
 			} else {
-				var query = "(∏ ω ∏)";
+				var query = "(∏ ω ∏)"; //Needs to be changed to the filtered term from tweet text
 				window.term = query;
 				$.ajax({
 					url: 'https://www.googleapis.com/customsearch/v1?key=AIzaSyC3j0IL8MvOHlnJyxlvVBtV516H_GWm9w0&cx=013127619618331965896:basxoxgd-ce&q='+query+'&searchType=image',
@@ -66,7 +66,10 @@
 				});
 				$.each(formattedData, function(index, value) {
 					var tweet = value.text,
-						contextBlock = "<li>"+tweet+"</li>";
+						author = value.author,
+						id = value.id,
+						url = "http://twitter.com/"+author+"/status/"+id,
+						contextBlock = "<li>"+tweet+" <a href='"+url+"' target='_blank'>➚</a></li>";
 					$('#contextContainer').append(contextBlock);
 				});
 				$('#defContainer > li > div').hide();			
