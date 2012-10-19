@@ -9,19 +9,19 @@
 		<script>
 			if(localStorage.twitterSearch) {//twitterSearch is a property of localStorage; can be named anything
 				var twitterData = JSON.parse(localStorage.twitterSearch),
-					formattedData = [];
+					formattedTweets = [];
 				$.each(twitterData.results, function(index, tweet) {
 					var id = tweet.id_str,
 						text = tweet.text,
 						author = tweet.from_user;
 					window.term = tweet.text;
-					formattedData.push({ //save only the data you want
+					formattedTweets.push({ //save only the data you want
 						id: id,
 						text: text,
 						author: author
 					});
 				});
-				localStorage.formattedData = JSON.stringify(formattedData);
+				localStorage.formattedTweets = JSON.stringify(formattedTweets);
 			} else { //if the information does not exist in the cache, do this (add it, which is defined in the success property function)
 				var data;
 				$.ajax({
@@ -50,7 +50,7 @@
 				var query = "(∏ ω ∏)"; //Needs to be changed to the filtered term from tweet text
 				window.term = query;
 				$.ajax({
-					url: 'https://www.googleapis.com/customsearch/v1?key=AIzaSyC3j0IL8MvOHlnJyxlvVBtV516H_GWm9w0&cx=013127619618331965896:basxoxgd-ce&q='+query+'&searchType=image',
+					url: 'https://www.googleapis.com/customsearch/v1?key=AIzaSyC3j0IL8MvOHlnJyxlvVBtV516H_GWm9w0&cx=013127619618331965896:basxoxgd-ce&q='+query+'&searchType=image', //figure out how to limit search results
 					dataType:'jsonp',
 					success:function(response){
 						localStorage.imageSearch = JSON.stringify(response);
@@ -64,7 +64,7 @@
 						defBlock = "<li><div></div><img src='"+imgUrl+"' /></li>";
 					$('#defContainer').append(defBlock);
 				});
-				$.each(formattedData, function(index, value) {
+				$.each(formattedTweets, function(index, value) {
 					var tweet = value.text,
 						author = value.author,
 						id = value.id,
