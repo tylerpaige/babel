@@ -75,11 +75,9 @@
 				$('#defContainer > li > div').hide();			
 				$('#defContainer > li').mouseenter(function() {
 					jQuery(this).children('div').show();
-				});
-				$('#defContainer > li').mouseleave(function() {
+				}).mouseleave(function() {
 					jQuery(this).children('div').hide();
-				});
-				$('#defContainer > li').click(function() {
+				}).click(function() {
 					jQuery(this).remove();
 				});
 			});
