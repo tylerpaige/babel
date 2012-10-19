@@ -3,6 +3,14 @@
 @red: #AF352D;
 @green:#407238;
 
+@radius:3px;
+.rounded-corners{
+	-webkit-border-radius:@radius;
+	-moz-border-radius:@radius;
+	border-radius:@radius;
+	border:1px transparent;
+}
+
 body{
 	margin:0px 5px 0 5px;
 	font-family:arial, helvetica, sans-serif;
@@ -32,6 +40,14 @@ a.active{
 	}
 	li+li{
 		margin-left:10px;
+	}
+	#search{
+		float:right;
+		width:220px;
+		input{
+			width:100%;
+			.rounded-corners;
+		}
 	}
 }
 #container{
