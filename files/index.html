@@ -11,12 +11,12 @@
 				var twitterData = JSON.parse(localStorage.twitterSearch),
 					formattedData = [];
 				$.each(twitterData.results, function(index, tweet) {
-					var id = tweet.id,
+					var id = tweet.id_str,
 						text = tweet.text,
 						author = tweet.from_user;
 					window.term = tweet.text;
 					formattedData.push({ //save only the data you want
-						id: id_str,
+						id: id,
 						text: text,
 						author: author
 					});
