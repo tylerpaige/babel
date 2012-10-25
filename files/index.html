@@ -59,6 +59,16 @@
 				});
 			}
 			$(document).ready(function() {
+			
+				//MongoDB stuff
+				mongUtil.config({
+					"db":"babeldb",
+					"appID":"heroku_app7962868",
+					"apiKey":"5089c368e4b0a116b09053b1"
+				});
+				mongoUtil.get();
+				
+				//Definition interaction scripts
 				$('#defContainer > li > div').hide();			
 				$('#defContainer > li').mouseenter(function() {
 					jQuery(this).find(".x").show();
