@@ -54,6 +54,15 @@ language of this sort. (Just realized this. Fuck.)
 	</li>
 </ul>
 
+<h3>Regular Expressions for filtering</h3>
+<ul>
+	<li>Retweet Formats:  /(RT:?)?["\s]?(@[\w]+)?[\s"]?(\s?:)?[\s"]/g</li>
+		<ul><li>This RegExp is also selecting spaces in between words... not really sure how to fix this one</li></ul>
+	<li>URLs/Links: /(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/g</li>
+	<li>LtoR Emoticons: /[:;][\-']?[\)\(\[\]\{\}\*oO0DpP]/g</li>
+	<li>RtoL Emoticons: /[D\(\)\[\]\{\}][\-']?[;:]/g</li>
+</ul>
+
 <h3>Personal Notes for creating keys at school</h3>
 
 This is just a sample project to get the students in a guest lecture at Cooper Union going with GitHub and Heroku.
