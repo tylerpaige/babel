@@ -37,7 +37,8 @@
 							author: author
 						);
 					});
-					localStorage.formattedTweets = JSON.stringify(formattedTweets); //WHAT DOES THIS DO
+					localStorage.formattedTweets = JSON.stringify(formattedTweets);
+					console.log(formattedTweets);
 					
 					
 				} else { //if the information does not exist in the cache, do this (add it, which is defined in the success property function)
