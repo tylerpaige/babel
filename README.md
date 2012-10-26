@@ -56,8 +56,7 @@ language of this sort. (Just realized this. Fuck.)
 
 <h3>Regular Expressions for filtering</h3>
 <ul>
-	<li>Retweet Formats:  /(RT:?)?["\s]?(@[\w]+)?[\s"]?(\s?:)?[\s"]/g</li>
-		<ul><li>This RegExp is also selecting spaces in between words... not really sure how to fix this one</li></ul>
+	<li>Retweet Formats:  /(RT:?["'\s]{0,2})?(@[a-zA-Z\d]+[:\s"']{1,3})?/g</li>
 	<li>URLs/Links: /(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/g</li>
 	<li>LtoR Emoticons: /[:;][\-']?[\)\(\[\]\{\}\*oO0DpP]/g</li>
 	<li>RtoL Emoticons: /[D\(\)\[\]\{\}][\-']?[;:]/g</li>
