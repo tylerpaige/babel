@@ -50,7 +50,6 @@
 							id = value.id,
 							url = "http://twitter.com/"+author+"/status/"+id,
 							contextBlock = "<li>"+tweet+" <a href='"+url+"' target='_blank'>➚</a></li>";
-						console.log(contextBlock);
 						$('#contextContainer').append(contextBlock);
 				});
 				} else { //if the information does not exist in the cache, do this (add it, which is defined in the success property function)
@@ -84,7 +83,8 @@
 					});
 				} else {
 					var query = term; //this is coming up as "undefined"... not sure why.
-					console.log(query); //this isn't even working
+					console.log("this is the saved query: ", query); //this isn't even working
+					console.log("this is the saved global term: ", term);
 					$.ajax({
 						url: 'https://www.googleapis.com/customsearch/v1?key=AIzaSyC3j0IL8MvOHlnJyxlvVBtV516H_GWm9w0&cx=013127619618331965896:basxoxgd-ce&q='+query+'&searchType=image', //figure out how to limit search results
 						dataType:'jsonp',
