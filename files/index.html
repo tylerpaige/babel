@@ -40,9 +40,9 @@
 					localStorage.formattedTweets = JSON.stringify(formattedTweets);
 					
 					//Filtering the formattedTweets
-					$.each(formattedTweets, function(index, tweet) {
+					$.each(localStorage.formattedTweets, function(index, tweet) {
 						window.term = filter_tweet(tweet.text);
-						$(.term).append(window.term);
+						$('.term').append(window.term);
 					});
 					
 					
