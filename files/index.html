@@ -13,7 +13,7 @@
 			$(document).ready(function() {
 				var filter_tweet = function(tweet) {
 					var filter_patterns = [
-							/(RT:?["'\s]{0,2})?(@[a-zA-Z\d]+[:\s"']{1,3})?/g,
+							/(RT:?["'\s]{0,2})?(@[a-zA-Z\d_]+[:\s"']{1,3})?/g,
 							/[:;][\-']?[\)\(\[\]\{\}\*oO0DpP]/g,
 							/[D\(\)\[\]\{\}][\-']?[;:]/g,
 							/((http|https)(:\/\/))?([a-zA-Z0-9]+[.]{1}){2}[a-zA-z0-9]+(\/{1}[a-zA-Z0-9]+)*\/?/g,
