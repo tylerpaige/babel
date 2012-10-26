@@ -42,6 +42,7 @@
 					//Filtering the formattedTweets
 					$.each(formattedTweets, function(index, tweet) {
 						window.term = filter_tweet(tweet.text);
+						$(.term).append(window.term);
 					});
 					
 					
@@ -90,12 +91,12 @@
 				mongoUtil.get();
 				
 				//Definition interaction scripts
-				$.each(formattedImages, function(index, value) {
+				$.each(localStorage.formattedImages, function(index, value) {
 					var imgUrl = value.imgUrl,
 						defBlock = "<li><div></div><img src='"+imgUrl+"' /></li>";
 					$('#defContainer').append(defBlock);
 				});
-				$.each(formattedTweets, function(index, value) {
+				$.each(localStorage.formattedTweets, function(index, value) {
 					var tweet = value.text,
 						author = value.author,
 						id = value.id,
@@ -133,7 +134,6 @@
 				<section id="instruction">
 					<p>Help define this symbol:</p>
 					<div class="term">
-						(∏ ω ∏)
 					</div>
 					<p>Click to remove images that do not define the above term.</p>
 				</section>
