@@ -83,8 +83,8 @@
 						$('#defContainer').append(defBlock);
 					});
 				} else {
-					var query = term;
-					console.log(query);
+					var query = term; //this is coming up as "undefined"... not sure why.
+					console.log(query); //this isn't even working
 					$.ajax({
 						url: 'https://www.googleapis.com/customsearch/v1?key=AIzaSyC3j0IL8MvOHlnJyxlvVBtV516H_GWm9w0&cx=013127619618331965896:basxoxgd-ce&q='+query+'&searchType=image', //figure out how to limit search results
 						dataType:'jsonp',
