@@ -86,6 +86,7 @@
 					var query = term; //this is coming up as "undefined"... not sure why.
 					console.log("this is the saved query: ", query); //this isn't even working
 					console.log("this is the saved global term: ", term);
+					console.log("what about the window.term: ", window.term);
 					$.ajax({
 						url: 'https://www.googleapis.com/customsearch/v1?key=AIzaSyC3j0IL8MvOHlnJyxlvVBtV516H_GWm9w0&cx=013127619618331965896:basxoxgd-ce&q='+query+'&searchType=image', //figure out how to limit search results
 						dataType:'jsonp',
