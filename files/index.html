@@ -31,13 +31,13 @@
 						var id = tweet.id_str,
 							text = tweet.text,
 							author = tweet.from_user;
-						formattedTweets.push({ //save only the data you want
+						formattedTweets.push( //save only the data you want
 							id: id,
 							text: text,
 							author: author
-						});
+						);
 					});
-					
+					localStorage.formattedTweets = JSON.stringify(formattedTweets); //WHAT DOES THIS DO
 					
 					
 				} else { //if the information does not exist in the cache, do this (add it, which is defined in the success property function)
