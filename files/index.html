@@ -31,11 +31,11 @@
 						var id = tweet.id_str,
 							text = tweet.text,
 							author = tweet.from_user;
-						formattedTweets.push( //save only the data you want
+						formattedTweets.push({ //save only the data you want
 							id: id,
 							text: text,
 							author: author
-						);
+						});
 					});
 					localStorage.formattedTweets = JSON.stringify(formattedTweets);
 					console.log(formattedTweets);
