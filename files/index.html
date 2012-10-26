@@ -41,9 +41,8 @@
 					
 					//Filtering the formattedTweets
 					$.each(localStorage.formattedTweets, function(index, tweet) {
-						window.term = filter_tweet(tweet.text);
 						console.log("This is the Tweet's text: ",tweet.text, "; This is the extracted term: ", window.term);
-						$('.term').append(window.term);
+						window.term = filter_tweet(tweet.text);
 					});
 					
 					
