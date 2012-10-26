@@ -37,14 +37,11 @@
 							author: author
 						});
 					});
-					localStorage.formattedTweets = JSON.stringify(formattedTweets);
-					
-					//Filtering the formattedTweets
 					$.each(localStorage.formattedTweets, function(index, tweet) {
 						console.log("This is the Tweet's text: ",tweet.text, "; This is the extracted term: ", window.term);
 						window.term = filter_tweet(tweet.text);
 					});
-					
+					localStorage.formattedTweets = JSON.stringify(formattedTweets);
 					
 				} else { //if the information does not exist in the cache, do this (add it, which is defined in the success property function)
 					var data;
