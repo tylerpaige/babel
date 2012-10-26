@@ -42,7 +42,7 @@
 					});
 					localStorage.formattedTweets = JSON.stringify(formattedTweets);
 					console.log(formattedTweets);
-					term = filter_tweet(formattedTweets[0].text);
+					term = $.trim(filter_tweet(formattedTweets[0].text));
 					
 				} else { //if the information does not exist in the cache, do this (add it, which is defined in the success property function)
 					var data;
