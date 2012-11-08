@@ -20,6 +20,7 @@
 							/((http|https)(:\/\/))?([a-zA-Z0-9]+[.]{1}){2}[a-zA-z0-9]+(\/{1}[a-zA-Z0-9]+)*\/?/g, //urls
 							/([\"\'\(\[])*[a-zA-Z0-9:\,\.\'\ｗ]{2,}[\"\'\)\]]*\s?/g, //standard words
 							/([ªℊℹΆΈΉΊΌΎΐΑΒΕΖΗΚΜΝΟΡΤκοτϲϻϺϹ]{2,})*/g, //greek letters
+							/([\!\?(...)]{2,}?)/g, //emphatic punctuation
 							/([ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ]{2,})*/g, //"fullwidth" latin characters	THAT CHEAT
 							/[ʰʲʳʷʸˢˣᴬᴮᴰᴱᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾᴿᵀᵁᵂᵃᵅᵇᵈᵉᵍᵏᵐᵒᵖᵗᵘᵚᵛᵞᵡᵸᶜᶠᶢᶫᶰ]?/g //"non-letter" letters (ie: modifiers)
 						];
@@ -91,7 +92,7 @@
 										});
 										$.each(formattedImages, function(index, value) {
 											var imgUrl = value.imgUrl,
-											defBlock = "<li><div></div><img src='"+imgUrl+"' /></li>";
+											defBlock = "<li><div></div><img src='"+imgUrl+"' /><input type='hidden' name='"+index+"' value='"+imgUrl+"' /></li>";
 											$('#defContainer').append(defBlock);
 										});
 										//Now define how the user interacts with images
@@ -102,6 +103,20 @@
 											jQuery(this).children('div').hide();
 										}).click(function() {
 											jQuery(this).remove();
+										});
+										//MongoDB stuff
+										mongoUtil.config({
+											"db":"babeldb",
+											"appID":"heroku_app7962868",
+											"apiKey":"5089c368e4b0a116b09053b1"
+										});
+										$('#accept').click(function() {
+											var term = $('.term').contents();
+											var defStr = $('#defSubmission').serialize();
+											mongoUtil.post("definition",term,defStr, function(){
+												mongUtil.get();
+											});			
+											console.log("ok submitted");
 										});
 									},
 									error:function(error){
@@ -118,14 +133,10 @@
 						console.log(error);
 					}
 				});	
+				
 			
-				//MongoDB stuff
-				mongoUtil.config({
-					"db":"babeldb",
-					"appID":"heroku_app7962868",
-					"apiKey":"5089c368e4b0a116b09053b1"
-				});
-				mongoUtil.get();
+				
+				
 
 			});
 		</script>
@@ -152,23 +163,25 @@
 					</div>
 					<p>Click to remove images that do not define the above term.</p>
 				</section>
-				<section id="entry">
-					<ol id="defContainer">
-						
-					</ol>
-					<h2>Usage & Context:</h2>
-					<ol id="contextContainer">
-						
-					</ol>
-				</section>
-				<section id="decision">
-					<div id="accept">
-						<a class="accept" href="#">Accept this definition</a>
-					</div>
-					<div id="deny">
-						<a class="deny" href="#">Throw away this term</a>
-					</div>
-				</section>
+				<form id="defSubmission" action="">
+					<section id="entry">
+						<ol id="defContainer">
+							
+						</ol>
+						<h2>Usage & Context:</h2>
+						<ol id="contextContainer">
+							
+						</ol>
+					</section>
+					<section id="decision">
+						<div id="accept">
+							<a class="accept" href="#">Accept this definition</a>
+						</div>
+						<div id="deny">
+							<a class="deny" href="#">Throw away this term</a>
+						</div>
+					</section>
+				</form>
 			</article>
 		</div>
 	</body>
