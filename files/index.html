@@ -37,10 +37,42 @@
 						formattedTweets.push({ //save only the data you want
 							id: id,
 							text: text,
+							term: filter_tweet(text),
 							author: author
 						});
 					});
+					term = formattedTweets[0].term;
+					console.log("Term should be set here to: ", term);
 					localStorage.formattedTweets = JSON.stringify(formattedTweets); //Converts to string is can actually be saved in localStorage
+					
+					//Get google images–– only search Google once Twitter has been searched and the results are formatted
+					if(localStorage.imageSearch) {
+						var imageResults = JSON.parse(localStorage.imageSearch),
+							formattedImages = [];
+						$.each(imageResults.items, function(index, value) {
+							var imgUrl = value.link;
+							formattedImages.push({
+								imgUrl : imgUrl
+							});
+						});
+						localStorage.formattedImages = JSON.stringify(formattedImages);
+						$.each(formattedImages, function(index, value) {
+							var imgUrl = value.imgUrl,
+							defBlock = "<li><div></div><img src='"+imgUrl+"' /></li>";
+							$('#defContainer').append(defBlock);
+						});
+					} else {
+						console.log("Term should be understood here as it is a global variable: ", term);
+						var query = term; //this is coming up as "undefined"... not sure why.
+						$.ajax({
+							url: 'https://www.googleapis.com/customsearch/v1?key=AIzaSyC3j0IL8MvOHlnJyxlvVBtV516H_GWm9w0&cx=013127619618331965896:basxoxgd-ce&q='+query+'&searchType=image', //figure out how to limit search results
+							dataType:'jsonp',
+							success:function(response){
+								localStorage.imageSearch = JSON.stringify(response);
+								console.log(response);
+							}
+						});
+					}
 					//Layout alterations
 					$('.term').append(term);
 					$.each(formattedTweets, function(index, value) {
@@ -57,8 +89,6 @@
 						url: 'http://search.twitter.com/search.json?q=%E3%82%B7%20OR%20%E3%81%A3%20OR%20%E3%83%8F%20OR%20%E3%81%A1%20OR%20(%E0%AB%80%20OR%20%E3%81%93%20OR%20%E0%B1%AA%20OR%20%E2%97%9E%E0%B8%B4%20OR%20%E2%97%9F%E0%B8%B4%20OR%20%E2%9A%97%E0%B8%B1%20lang%3Aen&rpp=1',
 						dataType:'jsonp',
 						success:function(response) {//has to be called "response"
-							term = $.trim(filter_tweet(response.results[0].text));
-							console.log("Term is set here if there are no formattedTweets in the localStorage: ", term);
 							localStorage.twitterSearch = JSON.stringify(response); //response has to be wrapped in this to convert the object to a string
 						},
 						error: function(error){//should pass the actual error that was encountered
@@ -66,34 +96,7 @@
 						}
 					});	
 				}
-				//Get google images
-				if(localStorage.imageSearch) {
-					var imageResults = JSON.parse(localStorage.imageSearch),
-						formattedImages = [];
-					$.each(imageResults.items, function(index, value) {
-						var imgUrl = value.link;
-						formattedImages.push({
-							imgUrl : imgUrl
-						});
-					});
-					localStorage.formattedImages = JSON.stringify(formattedImages);
-					$.each(formattedImages, function(index, value) {
-						var imgUrl = value.imgUrl,
-						defBlock = "<li><div></div><img src='"+imgUrl+"' /></li>";
-						$('#defContainer').append(defBlock);
-					});
-				} else {
-					console.log("Term should be understood here as it is a global variable: ", term);
-					var query = term; //this is coming up as "undefined"... not sure why.
-					$.ajax({
-						url: 'https://www.googleapis.com/customsearch/v1?key=AIzaSyC3j0IL8MvOHlnJyxlvVBtV516H_GWm9w0&cx=013127619618331965896:basxoxgd-ce&q='+query+'&searchType=image', //figure out how to limit search results
-						dataType:'jsonp',
-						success:function(response){
-							localStorage.imageSearch = JSON.stringify(response);
-							console.log(response);
-						}
-					});
-				}
+				
 			
 				//MongoDB stuff
 				mongoUtil.config({
