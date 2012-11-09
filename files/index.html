@@ -10,8 +10,21 @@
 		<script>
 		
 			var term; //declare here so it can be used anywhere
-		
+			var formattedImages = [];
 			$(document).ready(function() {
+				//About drawer code
+				$('#about').hide();
+				$('#openAbout').click(function() {
+					if($('#about').is(":hidden")) {
+						$('#about').slideDown("slow");
+					} else {
+						$('#about').slideUp();
+					}
+				});
+				$('#closeAbout').click(function(){
+					$('#about').slideUp();
+				});
+				//How to isolate the term
 				var filter_tweet = function(tweet) {
 					var filter_patterns = [
 							/(RT:?["'\s]{0,2})?(@[a-zA-Z\d_]+[:\s"']{1,3})?/g, //retweets
@@ -46,98 +59,93 @@
 							});
 						});
 						term = $.trim(filter_tweet(formattedTweets[0].text));
+						console.log("what the hell is term at this point? ", term);
 						//Find alternative contexts
-						var query = term;
-						console.log("what the hell is term at this point? ", query);
-						$.ajax({
-							url: 'http://search.twitter.com/search.json?q='+query+'&rpp=3',
-							dataType:'jsonp',
-							success:function(response) {
-								console.log("these are the context tweets: ", response);
-								var contextTweets = [];
-								$.each(response.results, function(index, tweet){
-									var id = tweet.id_str,
-										text = tweet.text,
-										author = tweet.from_user;
-									contextTweets.push({ //save only the data you want
-										id: id,
-										text: text,
-										author: author
-									});
-								});
-								//Add Twitter data to layout
-								$('.term').append(term);
-								$.each(contextTweets, function(index, value) {
-									var tweet = value.text,
-										author = value.author,
-										id = value.id,
-										url = "http://twitter.com/"+author+"/status/"+id,
-										contextBlock = "<li>"+tweet+" <a href='"+url+"' target='_blank'>➚</a></li>";
-									$('#contextContainer').append(contextBlock);
-								}); //Working up to here
-								//Now search Google
-								var query = term;
-								console.log("This is google's query: ", term);
-								$.ajax({
-									url: 'https://www.googleapis.com/customsearch/v1?key=AIzaSyC3j0IL8MvOHlnJyxlvVBtV516H_GWm9w0&cx=013127619618331965896:basxoxgd-ce&q='+query+'&searchType=image', //figure out how to limit search results
-									dataType:'jsonp',
-									success:function(response){
-										console.log("These are the image results: ", response);
-										var formattedImages = [];
-										$.each(response.items, function(index, value) {
-											var imgUrl = value.link;
-											formattedImages.push({
-												imgUrl : imgUrl
-											});
-										});
-										$.each(formattedImages, function(index, value) {
-											var imgUrl = value.imgUrl,
-											defBlock = "<li><div></div><img src='"+imgUrl+"' /><input type='hidden' name='"+index+"' value='"+imgUrl+"' /></li>";
-											$('#defContainer').append(defBlock);
-										});
-										//Now define how the user interacts with images
-										$('#defContainer > li > div').hide();			
-										$('#defContainer > li').mouseenter(function() {
-											jQuery(this).children('div').show();
-										}).mouseleave(function() {
-											jQuery(this).children('div').hide();
-										}).click(function() {
-											jQuery(this).remove();
-										});
-										//MongoDB stuff
-										mongoUtil.config({
-											"db":"babeldb",
-											"appID":"heroku_app7962868",
-											"apiKey":"5089c368e4b0a116b09053b1"
-										});
-										$('#accept').click(function() {
-											var term = $('.term').contents();
-											var defStr = $('#defSubmission').serialize();
-											mongoUtil.post("definition",term,defStr, function(){
-												mongUtil.get();
-											});			
-											console.log("ok submitted");
-										});
-									},
-									error:function(error){
-										console.log(error);
-									}
-								});
-							},
-							error:function(error){
-								console.log(error);
-							}
-						});
+						$('#container').trigger('findContext');
 					},
-					error:function(error){//should pass the actual error that was encountered
+					error:function(error){
 						console.log(error);
 					}
-				});	
-				
-			
-				
-				
-
+				});
+				$('#container').on('findContext', function(){
+					$.ajax({
+						url: 'http://search.twitter.com/search.json?q='+term+'&rpp=3', //at some point, you will want to add a callback to this url request
+						dataType:'jsonp',
+						success:function(response) {
+							console.log("these are the context tweets: ", response);
+							var contextTweets = [];
+							$.each(response.results, function(index, tweet){
+								var id = tweet.id_str,
+									text = tweet.text,
+									author = tweet.from_user;
+								contextTweets.push({ //save only the data you want
+									id: id,
+									text: text,
+									author: author
+								});
+							});
+							//Add Twitter data to layout
+							$('.term').append(term);
+							$.each(contextTweets, function(index, value) {
+								var tweet = value.text,
+									author = value.author,
+									id = value.id,
+									url = "http://twitter.com/"+author+"/status/"+id,
+									contextBlock = "<li>"+tweet+" <a href='"+url+"' target='_blank'>➚</a></li>";
+								$('#contextContainer').append(contextBlock);
+							});
+							//Then trigger image search
+							$('#container').trigger('findImages');
+						},
+						error:function(error){
+							console.log(error);
+						}
+					});
+				});
+				$('#container').on('findImages', function() {
+					var query = term;
+					console.log("This is google's query: ", term);
+					$.ajax({
+						url: 'https://www.googleapis.com/customsearch/v1?key=AIzaSyC3j0IL8MvOHlnJyxlvVBtV516H_GWm9w0&cx=013127619618331965896:basxoxgd-ce&q='+query+'&searchType=image', //figure out how to limit search results
+						dataType:'jsonp',
+						success:function(response){
+							console.log("These are the image results: ", response);
+							$.each(response.items, function(index, value) {
+								var imgUrl = value.link;
+								formattedImages.push({
+									imgUrl : imgUrl
+								});
+							});
+							$.each(formattedImages, function(index, value) {
+								var imgUrl = value.imgUrl,
+								defBlock = "<li id='"+index+"'><div></div><img src='"+imgUrl+"' /><input type='hidden' name='"+index+"' value='"+imgUrl+"' /></li>";
+								$('#defContainer').append(defBlock);
+							});
+							//Finally, execute the regular jQuery actions
+							$('#container').trigger('regJQ');
+						},
+						error:function(error){
+							console.log(error);
+						}
+					});
+				});
+				$('#container').on('regJQ', function() {
+					//Now define how the user interacts with images
+					$('#defContainer > li > div').hide();
+					$('#defContainer > li').mouseenter(function() {
+						jQuery(this).children('div').show();
+					}).mouseleave(function() {
+						jQuery(this).children('div').hide();
+					}).click(function() {
+						jQuery(this).remove();
+					});
+					//MongoDB stuff
+					mongoUtil.config({
+						"db":"babeldb",
+						"appID":"heroku_app7962868",
+						"apiKey":"5089c368e4b0a116b09053b1"
+					});
+				});
 			});
 		</script>
 	</head>
@@ -146,10 +154,21 @@
 			<li><a href="#" class="active">Contribute</a></li>
 			<li><a href="#">Search</a></li>
 			<li><a href="#">View Current Dictionary</a></li>
-			<li><a href="#">About</a></li>
+			<li><a id="openAbout">About</a></li>
 			<form id="search">
-				<input type="text" value="Search the dictionary" name="search" />
+				<input type="text" placeholder="Search the dictionary" name="search" />
 			</form>
+		</div>
+		<div id="about">
+			<h1>About Panhumanism</h1>
+			<div class="text">
+				<p>Appropriating non-Latin characters (eg: Japanese, Thai, Chinese characters), some tweets create images to express something. The characters are abstracted from their literal meaning and are given a new meaning based solely on imagery. Thus, a new language is formed that is understandable by all-- a sort of pan-humanist language.</p>
+				<p>The language's "words" have no separation between the word and the meaning. That is to say, the words are self-referential.</p>
+				<p>This project attempts to create a dictionary for this language. An interface will be created that will crowd-source the creation of this dictionary. The interface shows a new "word" [eg: (∏ ω ∏) ] and Google Image results of that word as a query. Users of the interface are instructed to delete the image results that do not match what the word means. When all of the Google images represent what the word means, the user should "approve" the word, and it will be added to the dictionary. If no images ever represent the word, the word is rejected.</p>
+				<p>Later, the dictionary can be viewed.</p>
+				<p>This, of course, is entirely gratuitous, as there is no need for a dictionary for a language of this sort.</p>
+			</div>
+			<div id="closeAbout">Close ↑</div>
 		</div>
 		<div id="container">
 			<header>
