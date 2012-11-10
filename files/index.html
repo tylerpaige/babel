@@ -11,7 +11,8 @@
 		
 			var term, //declare here so it can be used anywhere
 				formattedImages = [],
-				contextTweets = [];
+				contextTweets = [],
+				imageObject = {};
 			
 			$(document).ready(function() {
 				//MongoDB stuff
@@ -110,6 +111,10 @@
 								index: index,
 								imgUrl: imgUrl
 							});
+							imageObject = { 
+								index: {"imgUrl": imgUrl} //Erin, this is where I'd like the index name to change with the incrementing "index" paramter
+							};	
+							console.log("THIS SHOULD BE A JSON OBJECT: ", imageObject);
 						});
 						console.log("these is how the images were saved: ", formattedImages);
 						$.each(formattedImages, function(index, value) {
