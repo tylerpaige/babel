@@ -1,4 +1,5 @@
 @gray: #7A7A7A;
+@blueGray: #b7bcc3;
 @headerGray: lighten(@gray, 35%);
 @brown: #6B5F49;
 @red: #AF352D;
@@ -47,29 +48,34 @@ a.active{
 	}
 	#search{
 		float:right;
-		width:220px;
+		text-align:right;
+		width:350px;
 		padding-right:25px;
 		input{
-			width:100%;
+			width:130px;
 			background:url('../images/search.png') no-repeat;
-			background-position:208px 0px;
+			background-position:99% 0px;
 			border:1px @headerGray solid;
 			padding:0 2px 1px 2px;
 			position:relative;
 			top:-2px;
 			z-index:4;
 			outline:none;
+			box-shadow:0px 0px 0px transparent;
 		}
 	}
 }
-#openAbout{
+#openAbout, #goToSearch{
 	cursor:pointer;
 	text-decoration:underline;
 }
 #about{
 	width:100%;
-	background:@darkblue url('../images/aboutbg.png') repeat-x;
-	border-bottom:2px solid lighten(@darkblue,30%);
+	background:@darkblue;
+	background-image: url('../images/aboutbg.png'), url('../images/tower.jpg');
+	background-position: top, right bottom;
+	background-repeat: repeat-x, no-repeat;
+	//border-bottom:2px solid lighten(@darkblue,30%); ignored because it disrupts the tower image
 	color:#fff;
 	height:300px;
 	padding:15px 5px 3px 5px;
@@ -84,6 +90,27 @@ a.active{
 		-moz-columns:@columnStyle;
 		padding-left:25px;
 		width:650px;
+		float:left;
+		z-index:2;
+	}
+	#mostRecent{
+		font-family: Monaco,'Andale Mono','Liberation Mono','Courier New',monotype;
+		font-size:14pt;
+		width:250px;
+		height:100%;
+		position:absolute;
+		right:280px;
+		overflow:hidden;
+		z-index:1;
+		a{
+			color:@blueGray;
+			display:block;
+			text-decoration:none;
+			-webkit-mask-image: url('../images/tower.jpg');
+			-o-mask-image: url('../images/tower.jpg');
+			-moz-mask-image: url('../images/tower.jpg');
+			mask-image: url('../images/tower.jpg');
+		}
 	}
 	#closeAbout{
 		position:absolute;
@@ -93,6 +120,7 @@ a.active{
 		width:150px;
 		cursor:pointer;
 		font-weight:bold;
+		z-index:5;
 	}
 }
 #container{
