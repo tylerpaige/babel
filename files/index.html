@@ -50,7 +50,11 @@
 					$('#query').animate({width: '100%'}, 500);
 				}).blur(function() {
 					$('#query').animate({width: '130px'}, 500);
-				});			
+				});		
+				//JSON callbacks
+				var findTweets = function(jsonp){console.log("callback fired");};
+				var findContext = function(jsonp){console.log("callback context fired");};
+				
 				//How to isolate the term
 				var filter_tweet = function(tweet) {
 					var filter_patterns = [
@@ -73,10 +77,13 @@
 					return tweet;
 				}
 				//Get tweets to find a dictionary term	
-				$.getJSON('http://search.twitter.com/search.json?q=%E3%82%B7%20OR%20%E3%81%A3%20OR%20%E3%83%8F%20OR%20%E3%81%A1%20OR%20(%E0%AB%80%20OR%20%E3%81%93%20OR%20%E0%B1%AA%20OR%20%E2%97%9E%E0%B8%B4%20OR%20%E2%97%9F%E0%B8%B4%20OR%20%E2%9A%97%E0%B8%B1%20lang%3Aen&rpp=1&callback=?', function(data) {
-						console.log("now: ", data);
+				$.ajax({
+					url:'http://search.twitter.com/search.json?q=%E3%82%B7%20OR%20%E3%81%A3%20OR%20%E3%83%8F%20OR%20%E3%81%A1%20OR%20(%E0%AB%80%20OR%20%E3%81%93%20OR%20%E0%B1%AA%20OR%20%E2%97%9E%E0%B8%B4%20OR%20%E2%97%9F%E0%B8%B4%20OR%20%E2%9A%97%E0%B8%B1%20lang%3Aen&rpp=1&callback=findTweets',
+					dataType:'jsonp',
+					success:function(response) {
+						console.log("now: ", response); //you NEED a callback function. errors keep getting brought up
 						var formattedTweets = [];
-						$.each(data.results, function(index, tweet) {
+						$.each(response.results, function(index, tweet) {
 							var id = tweet.id_str,
 								text = tweet.text,
 								author = tweet.from_user;
@@ -86,39 +93,47 @@
 								author: author
 							});
 						});
-						term = $.trim(filter_tweet(formattedTweets[0].text));
-						console.log("what the hell is term at this point? ", term);
-						//Find alternative contexts
-						$('#container').trigger('findContext');
+					},
+					error:function(error){
+						console.log("Error encountered: ", error);
+					}
+				}).done(function() {
+					term = $.trim(filter_tweet(formattedTweets[0].text));
+					console.log("what the hell is term at this point? ", term);
+					//Find alternative contexts
+					$('#container').trigger('findContext');
 				});
 				$('#container').on('findContext', function(){
-					$.getJSON('http://search.twitter.com/search.json?q='+term+'&rpp=3&callback=?',
-					function(response) {
-						console.log("these are the context tweets: ", response);
-						$.each(response.results, function(index, tweet){
-							var id = tweet.id_str,
-								text = tweet.text,
-								author = tweet.from_user;
-							contextTweets.push({ //save only the data you want
-								id: id,
-								text: text,
-								author: author,
-								url: "http://twitter.com/"+author+"/status/"+id
+					$.ajax({
+						url:'http://search.twitter.com/search.json?q='+term+'&rpp=3&callback=findContext',
+						dataType:'jsonp',
+						success:function(response) {
+							console.log("these are the context tweets: ", response);
+							$.each(response.results, function(index, tweet){
+								var id = tweet.id_str,
+									text = tweet.text,
+									author = tweet.from_user;
+								contextTweets.push({ //save only the data you want
+									id: id,
+									text: text,
+									author: author,
+									url: "http://twitter.com/"+author+"/status/"+id
+								});
 							});
-						});
-						//Add Twitter data to layout
-						$('.term').append(term);
-						$.each(contextTweets, function(index, value) {
-							var tweet = value.text,
-								author = value.author,
-								id = value.id,
-								url = value.url,
-								contextBlock = "<li>"+tweet+" <a href='"+url+"' target='_blank'>➚</a></li>";
-							$('#contextContainer').append(contextBlock);
-						});
-						//Then trigger image search
-						$('#container').trigger('findImages');
+						}
+					});				
+					//Add Twitter data to layout
+					$('.term').append(term);
+					$.each(contextTweets, function(index, value) {
+						var tweet = value.text,
+							author = value.author,
+							id = value.id,
+							url = value.url,
+							contextBlock = "<li>"+tweet+" <a href='"+url+"' target='_blank'>➚</a></li>";
+						$('#contextContainer').append(contextBlock);
 					});
+					//Then trigger image search
+					$('#container').trigger('findImages');
 				});
 				$('#container').on('findImages', function() {
 					var query = term;
