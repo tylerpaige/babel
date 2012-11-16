@@ -1,0 +1,70 @@
+<html>
+	<head>
+		<script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
+		<script>
+			$(document).ready(function() {
+				//♥(っ˘з(˘⌣˘ )♥ ٩(´0`)۶ ,  (´Oƪ) 
+				var query = escape("♥(っ˘з(˘⌣˘ )♥ ٩(´0`)۶ ,  (´Oƪ) ");
+				console.log(query);
+				$.ajax({ //no encoding
+					url:'http://search.twitter.com/search.json',
+					dataType:'jsonp',
+					data:{
+						q: '♥',
+						rpp: 10
+					},
+					success:function(response) {
+						console.log("unencoded: ", response); //you NEED a callback function. errors keep getting brought up
+						var formattedTweets = [];
+						$.each(response.results, function(index, tweet) {
+							var id = tweet.id_str,
+								text = tweet.text,
+								author = tweet.from_user;
+							formattedTweets.push({ //save only the data you want
+								id: id,
+								text: text,
+								author: author
+							});
+						});
+						$.each(formattedTweets, function(index, tweet) {
+							$('body').append("<p>"+tweet.text+"</p>");
+						});
+					},
+					error:function(error){
+						console.log("Error encountered: ", error);
+					}
+				});
+				$.ajax({ //encoding
+					url:'http://search.twitter.com/search.json',
+					dataType:'jsonp',
+					data:{
+						q: encodeURI('♥'),
+						rpp: 10
+					},
+					success:function(response) {
+						console.log("encoded:", response); //you NEED a callback function. errors keep getting brought up
+						var formattedTweets = [];
+						$.each(response.results, function(index, tweet) {
+							var id = tweet.id_str,
+								text = tweet.text,
+								author = tweet.from_user;
+							formattedTweets.push({ //save only the data you want
+								id: id,
+								text: text,
+								author: author
+							});
+						});
+						$.each(formattedTweets, function(index, tweet) {
+							$('body').append("<p>"+tweet.text+"</p>");
+						});
+					},
+					error:function(error){
+						console.log("Error encountered: ", error);
+					}
+				});
+			});
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

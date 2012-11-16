@@ -24,18 +24,19 @@
 				});
 				//About drawer code
 				$('#about').hide();
+				var closeAbout = function(){
+					$('#about').slideUp();
+				};
 				$('#openAbout').click(function() {
 					if($('#about').is(":hidden")) {
 						$('#about').slideDown("slow");
 					} else {
-						$('#about').slideUp();
+						closeAbout();
 					}
 				});
-				$('#closeAbout').click(function(){
-					$('#about').slideUp();
-				});
+				$('#closeAbout').click(function(){	closeAbout();	});
 				$('#goToSearch').click(function(){
-					$('#query')
+					$('#query')//actions regarding adding/removing glows
 						.focus().animate({boxShadow:'0 0 10px #AF352D'})
 						.keypress(function() {
 							if($(this).is(":focus")) {
@@ -51,9 +52,6 @@
 				}).blur(function() {
 					$('#query').animate({width: '130px'}, 500);
 				});		
-				//JSON callbacks
-				var findTweets = function(jsonp){console.log("callback fired");};
-				var findContext = function(jsonp){console.log("callback context fired");};
 				
 				//How to isolate the term
 				var filter_tweet = function(tweet) {
@@ -78,11 +76,14 @@
 				}
 				//Get tweets to find a dictionary term	
 				$.ajax({
-					url:'http://search.twitter.com/search.json?q=%E3%82%B7%20OR%20%E3%81%A3%20OR%20%E3%83%8F%20OR%20%E3%81%A1%20OR%20(%E0%AB%80%20OR%20%E3%81%93%20OR%20%E0%B1%AA%20OR%20%E2%97%9E%E0%B8%B4%20OR%20%E2%97%9F%E0%B8%B4%20OR%20%E2%9A%97%E0%B8%B1%20lang%3Aen&rpp=1&callback=findTweets',
+					url:'http://search.twitter.com/search.json',
 					dataType:'jsonp',
+					data:{
+						q: '%E3%82%B7%20OR%20%E3%81%A3%20OR%20%E3%83%8F%20OR%20%E3%81%A1%20OR%20(%E0%AB%80%20OR%20%E3%81%93%20OR%20%E0%B1%AA%20OR%20%E2%97%9E%E0%B8%B4%20OR%20%E2%97%9F%E0%B8%B4%20OR%20%E2%9A%97%E0%B8%B1%20lang%3Aen',
+						rpp: 1
+					},
 					success:function(response) {
-						console.log("now: ", response); //you NEED a callback function. errors keep getting brought up
-						var formattedTweets = [];
+						formattedTweets = [];
 						$.each(response.results, function(index, tweet) {
 							var id = tweet.id_str,
 								text = tweet.text,
@@ -99,16 +100,19 @@
 					}
 				}).done(function() {
 					term = $.trim(filter_tweet(formattedTweets[0].text));
-					console.log("what the hell is term at this point? ", term);
+					query = encodeURI(term);
 					//Find alternative contexts
 					$('#container').trigger('findContext');
 				});
 				$('#container').on('findContext', function(){
 					$.ajax({
-						url:'http://search.twitter.com/search.json?q='+term+'&rpp=3&callback=findContext',
+						url:'http://search.twitter.com/search.json',
 						dataType:'jsonp',
+						data:{
+							q: query,
+							rpp: 3,
+						},
 						success:function(response) {
-							console.log("these are the context tweets: ", response);
 							$.each(response.results, function(index, tweet){
 								var id = tweet.id_str,
 									text = tweet.text,
@@ -120,47 +124,58 @@
 									url: "http://twitter.com/"+author+"/status/"+id
 								});
 							});
+							//Add Twitter data to layout
+							$('.term').append(term);
+							$.each(contextTweets, function(index, value) {
+								var tweet = value.text,
+									author = value.author,
+									id = value.id,
+									url = value.url,
+									contextBlock = "<li>"+tweet+" <a href='"+url+"' target='_blank'>➚</a></li>";
+								$('#contextContainer').append(contextBlock);
+							});
+							//Then trigger image search
+							$('#container').trigger('findImages');
 						}
 					});				
-					//Add Twitter data to layout
-					$('.term').append(term);
-					$.each(contextTweets, function(index, value) {
-						var tweet = value.text,
-							author = value.author,
-							id = value.id,
-							url = value.url,
-							contextBlock = "<li>"+tweet+" <a href='"+url+"' target='_blank'>➚</a></li>";
-						$('#contextContainer').append(contextBlock);
-					});
-					//Then trigger image search
-					$('#container').trigger('findImages');
 				});
 				$('#container').on('findImages', function() {
-					var query = term;
-					console.log("This is google's query: ", term);
-					$.getJSON('https://www.googleapis.com/customsearch/v1?key=AIzaSyC3j0IL8MvOHlnJyxlvVBtV516H_GWm9w0&cx=013127619618331965896:basxoxgd-ce&q='+query+'&searchType=image', //figure out how to limit search results
-					function(response){
-						console.log("These are the image results: ", response);
-						$.each(response.items, function(index, value) {
-							var imgUrl = value.link;
-							formattedImages.push({
-								index: index,
-								imgUrl: imgUrl
+					$.ajax({
+						url:'https://www.googleapis.com/customsearch/v1',
+						datatype:'jsonp',
+						data:{
+							key: 'AIzaSyC3j0IL8MvOHlnJyxlvVBtV516H_GWm9w0',
+							cx: '013127619618331965896:basxoxgd-ce',
+							q: query,
+							searchType: 'image'
+						},
+						success:function(response){
+							$.each(response.items, function(index, value) {
+								var imgUrl = value.link,
+									refIndex = 'ref'+index;//create an index that is not just a number so the splice method (used later) does not interpret the target record by position instead of index name
+								formattedImages.push({
+									index: refIndex,
+									imgUrl: imgUrl
+								});
 							});
-							imageObject = { 
-								index: {"imgUrl": imgUrl} //Erin, this is where I'd like the index name to change with the incrementing "index" paramter
-							};	
-							console.log("THIS SHOULD BE A JSON OBJECT: ", imageObject);
-						});
-						console.log("these is how the images were saved: ", formattedImages);
-						$.each(formattedImages, function(index, value) {
-							var imgUrl = value.imgUrl,
-								refIndex = value.index,
-								defBlock = "<li id='"+refIndex+"'><div></div><img src='"+imgUrl+"' /><input type='hidden' name='"+index+"' value='"+imgUrl+"' /></li>";
-							$('#defContainer').append(defBlock);
-						});
-						//Finally, execute the regular jQuery actions
-						$('#container').trigger('regJQ');
+							console.log("these is how the images were saved: ", formattedImages);
+							$.each(formattedImages, function(index, value) {
+								var imgUrl = value.imgUrl,
+									refIndex = value.index,
+									imageMarkup = $('<li id="'+refIndex+'"><div></div><img src="'+imgUrl+'"/></li>'); //this is wrapped in a $(...) to make it an object, instead of a string, so we can traverse through it
+									imageMarkup.find('img') //before adding the element to the DOM, check to see if its request gets an error
+										.on('error', function(e){
+											$(this).parent().remove();
+											formattedImages.splice(index, 1); //also remove it from the formattedImages array
+										});
+								$('#defContainer').append(imageMarkup);
+							});
+							//Finally, execute the regular jQuery actions
+							$('#container').trigger('regJQ');
+						},
+						error:function(error){
+							console.log(error);
+						}
 					});
 				});
 				$('#container').on('regJQ', function() {
@@ -172,9 +187,10 @@
 						jQuery(this).children('div').hide();
 					}).click(function() {
 						var index = $(this).attr('id');
+						console.log("I am going to delete the array record with the index ", index);
 						formattedImages.splice(index,1);
 						jQuery(this).remove();
-						console.log("deleted. here's what's left: ", formattedImages);
+						console.log(formattedImages);
 					});
 				});
 				$('#accept').click(function() {
@@ -188,7 +204,9 @@
 					});
 					//Save tweet contexts&usages
 					$.each(contextTweets, function (index, value) {
-						var data = [term, value.author, value.tweet, value.url];
+						var text = value.text,
+							url = value.url,
+							data = [term, text, url];
 						mongoUtil.post("context", data, function(){
 							console.log(data);
 						}); 
