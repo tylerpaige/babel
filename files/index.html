@@ -88,7 +88,7 @@
 						url:'http://search.twitter.com/search.json',
 						dataType:'jsonp',
 						data:{
-							q: '%E3%82%B7%20OR%20%E3%81%A3%20OR%20%E3%83%8F%20OR%20%E3%81%A1%20OR%20(%E0%AB%80%20OR%20%E3%81%93%20OR%20%E0%B1%AA%20OR%20%E2%97%9E%E0%B8%B4%20OR%20%E2%97%9F%E0%B8%B4%20OR%20%E2%9A%97%E0%B8%B1%20lang%3Aen',
+							q: '%E3%82%B7%20OR%20%E3%81%A3%20OR%20%E3%83%8F%20OR%20%E3%81%A1%20OR%20(%E0%AB%80%20OR%20%E3%81%93%20OR%20%E0%B1%AA%20OR%20%E2%97%9E%E0%B8%B4%20OR%20%E2%97%9F%E0%B8%B4%20OR%20%E2%9A%97%E0%B8%B1%20lang:en',
 							rpp: 1
 						},
 						success:function(response) {
@@ -154,7 +154,7 @@
 						url:'https://www.googleapis.com/customsearch/v1',
 						datatype:'jsonp',
 						data:{
-							key: 'AIzaSyC3j0IL8MvOHlnJyxlvVBtV516H_GWm9w0',
+							key: 'AIzaSyCCUuI297HZq8b4-_4mZqiHe-xY2OLzpW4',
 							cx: '013127619618331965896:basxoxgd-ce',
 							q: query,
 							searchType: 'image'
@@ -221,7 +221,6 @@
 						}, {	 						
 							 type     : 'autogrow',
 							 submit   : 'Correct?',
-							 cancel   : 'Never mind',
 						});
 				});
 				$('#accept').click(function() {
@@ -285,12 +284,11 @@
 					<p>Help define this symbol:</p>
 					<div id="termContainer">
 						<div class="term"></div>
-						
 					</div>
-					<p>Click to remove images that do not define the above term.</p>
 				</section>
 				<form id="defSubmission" action="">
 					<section id="entry">
+						<p>Click to remove images that do not define the above term.</p>
 						<ol id="defContainer">
 							
 						</ol>

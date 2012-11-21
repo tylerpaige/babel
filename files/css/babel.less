@@ -4,6 +4,7 @@
 @brown: #6B5F49;
 @red: #AF352D;
 @green:#407238;
+@lightGreen: lighten(@green, 35%);
 @darkblue:rgba(21,37,60,1.0);
 
 @radius:6px;
@@ -11,6 +12,14 @@
 	-webkit-border-radius:@radius;
 	-moz-border-radius:@radius;
 	border-radius:@radius;
+}
+@transition: all .5s ease-in-out;
+.transitions{
+	-webkit-transition: @transition;
+	-moz-transition: @transition;
+	-o-transition: @transition;
+	-ms-transition: @transition;
+	transition: @transition;
 }
 
 body{
@@ -142,10 +151,10 @@ header{
 	width:100%;
 }
 #instruction{
-	width:400px;
+	width:410px;
 	margin:auto;
 	border-bottom:1px solid @gray;
-	padding:10px 0 15px 0;
+	padding:10px 0 0px 0;
 	position:relative;
 	p{
 		color:@red;
@@ -168,29 +177,40 @@ header{
 		position:relative;
 		left:-75px;
 		cursor:pointer;
+		form{
+			text-align:center;
+		}
 		form textarea{
 			min-width:50px;
 			max-width:550px;
 			min-height:55px;
+			padding:0;
+			margin-bottom:-15px;
 			font-size:36pt;
 			font-weight:bold;
 			color:@brown;
 			text-align:center;
 			font-family:arial, helvetica, sans-serif;
-			border-width:0px 2px 2px 0px;
-			border-color:@blueGray;
+			border:0px;
+//			border-bottom: 2px @gray solid;
 		}
 		form textarea:focus{
 			outline:none;
 		}
 		form button{
-			width:270px;
-			float:left;
+			width:210px;
+			height:30px;
+			display:inline;
 			background:@headerGray;
 			border:0;
+			.transitions;
 		}
 		form button+button{
 			margin-left:10px;
+		}
+		form button:hover{
+			background:@lightGreen;
+//			background:lighten(desaturate(@green, 10%), 15%);
 		}
 	}
 	.howToEdit{
@@ -228,6 +248,9 @@ header{
 			cursor:pointer;
 		}
 	}
+}
+#entry p{
+	color:@red;
 }
 #entry h2{
 	margin:0px;
