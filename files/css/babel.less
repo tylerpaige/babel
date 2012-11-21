@@ -146,6 +146,7 @@ header{
 	margin:auto;
 	border-bottom:1px solid @gray;
 	padding:10px 0 15px 0;
+	position:relative;
 	p{
 		color:@red;
 		width:157px;
@@ -166,6 +167,41 @@ header{
 		width:550px;
 		position:relative;
 		left:-75px;
+		cursor:pointer;
+		form textarea{
+			min-width:50px;
+			max-width:550px;
+			min-height:55px;
+			font-size:36pt;
+			font-weight:bold;
+			color:@brown;
+			text-align:center;
+			font-family:arial, helvetica, sans-serif;
+			border-width:0px 2px 2px 0px;
+			border-color:@blueGray;
+		}
+		form textarea:focus{
+			outline:none;
+		}
+		form button{
+			width:270px;
+			float:left;
+			background:@headerGray;
+			border:0;
+		}
+		form button+button{
+			margin-left:10px;
+		}
+	}
+	.howToEdit{
+		width:200px;
+		position:absolute;
+		right:-290px;
+		bottom:48px;
+		font-size:10pt;
+		font-weight:normal;
+		text-align:left;
+		color:@red;
 	}
 }
 #defContainer{
