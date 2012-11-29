@@ -74,7 +74,7 @@ a.active{
 		}
 	}
 }
-#openAbout, #goToSearch{
+#openAbout, #openSearch{
 	cursor:pointer;
 	text-decoration:underline;
 }
@@ -122,6 +122,46 @@ a.active{
 		}
 	}
 	#closeAbout{
+		position:absolute;
+		bottom:5px;
+		right:20px;
+		text-align:right;
+		width:150px;
+		cursor:pointer;
+		font-weight:bold;
+		z-index:5;
+	}
+}
+#searchPanel{
+	width:100%;
+	background:@red;
+	color:#fff;
+	height:115px;
+	padding:15px 5px 3px 6px;
+	position:relative;
+	h1{
+		margin-bottom:5px;
+	}
+	input[type=text]{
+		width:400px;
+		height:30px;
+		padding:0 3px 0 3px;
+		background:#fff;
+		border:0;
+	}
+	input[type=submit]{
+		width:40px;
+		height:30px;
+		margin-left:5px;
+		background:lighten(@red, 35%);
+		border:0;
+		font-weight:bold;
+		cursor:pointer;
+	}
+	input:focus{
+		outline:none;
+	}
+	#closeSearch{
 		position:absolute;
 		bottom:5px;
 		right:20px;
@@ -204,13 +244,13 @@ header{
 			background:@headerGray;
 			border:0;
 			.transitions;
+			cursor:pointer;
 		}
 		form button+button{
 			margin-left:10px;
 		}
 		form button:hover{
 			background:@lightGreen;
-//			background:lighten(desaturate(@green, 10%), 15%);
 		}
 	}
 	.howToEdit{
@@ -270,6 +310,21 @@ header{
 	top:0px;
 	left:1px;
 }
+//For when no images are found
+#noResults{
+	background:@red;
+	color:#fff;
+	padding:8px 10px 8px 10px;
+	h1{
+		text-align:center;
+		font-size:26pt;
+		margin:0;
+	}
+	p{
+		color:#fff;
+	}
+}
+
 #decision{
 	width:470px;
 	text-align:center;

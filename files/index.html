@@ -26,8 +26,8 @@
 					"apiKey":"5089c368e4b0a116b09053b1"
 				});
 				//About drawer code
-				$('#about').hide();
-				var closeAbout = function(){
+				$('#about').hide();//first keep #about hidden
+				var closeAbout = function(){ //then define a function to close the about panel
 					$('#about').slideUp();
 				};
 				$('#openAbout').click(function() {
@@ -38,17 +38,17 @@
 					}
 				});
 				$('#closeAbout').click(function(){	closeAbout();	});
-				$('#goToSearch').click(function(){
-					$('#query')//actions regarding adding/removing glows
-						.focus().animate({boxShadow:'0 0 10px #AF352D'})
-						.keypress(function() {
-							if($(this).is(":focus")) {
-								$(this).animate({boxShadow:'0 0 0 transparent'});
-							}
-						})
-						.blur(function() {
-							$(this).animate({boxShadow:'0 0 0 transparent'});
-						});
+				
+				$('#searchPanel').hide();
+				var closeSearch = function(){
+					$('#searchPanel').slideUp();
+				};
+				$('#openSearch').click(function() {
+					if($('#searchPanel').is(":hidden")) {
+						$('#searchPanel').slideDown("slow");
+					} else {
+						closeSearch();
+					}
 				});
 				$('#query').focus(function() {
 					$('#query').animate({width: '100%'}, 500);
@@ -77,13 +77,6 @@
 					}
 					return tweet;
 				}
-// 				$('#container').trigger('findTweets');
-// 				$('body').trigger('what');
-// 				$('body').on('what', function() {
-// 					alert("go!");
-// 				});
-				//Get tweets to find a dictionary term
-// 				$('#container').on('findTweets', function(){	
 					$.ajax({
 						url:'http://search.twitter.com/search.json',
 						dataType:'jsonp',
@@ -115,6 +108,7 @@
 					});
 // 				});
 				$('#container').on('findContext', function(){
+					console.log("searching for context. the query is: ", query);
 					$.ajax({
 						url:'http://search.twitter.com/search.json',
 						dataType:'jsonp',
@@ -123,6 +117,8 @@
 							rpp: 3,
 						},
 						success:function(response) {
+							$('#contextContainer').empty();
+							contextTweets = []; //Empty both the DOM context and the context array in case we're reperforming search
 							$.each(response.results, function(index, tweet){
 								var id = tweet.id_str,
 									text = tweet.text,
@@ -135,7 +131,7 @@
 								});
 							});
 							//Add Twitter data to layout
-							$('.term').append(term);
+							$('.term').empty().prepend(term);
 							$.each(contextTweets, function(index, value) {
 								var tweet = value.text,
 									author = value.author,
@@ -149,37 +145,48 @@
 						}
 					});				
 				});
-				$('#container').on('findImages', function() {
+				$('#container').on('findImages', function() {	
+					console.log("searching for images. the query is the term: ", term);
 					$.ajax({
 						url:'https://www.googleapis.com/customsearch/v1',
 						datatype:'jsonp',
 						data:{
 							key: 'AIzaSyCCUuI297HZq8b4-_4mZqiHe-xY2OLzpW4',
 							cx: '013127619618331965896:basxoxgd-ce',
-							q: query,
+							q: term, //I have switched back to a non encodeURI search term because the encoded ones were giving me weird results
 							searchType: 'image'
 						},
 						success:function(response){
-							$.each(response.items, function(index, value) {
-								var imgUrl = value.link,
-									refIndex = 'ref'+index;//create an index that is not just a number so the splice method (used later) does not interpret the target record by position instead of index name
-								formattedImages.push({
-									index: refIndex,
-									imgUrl: imgUrl
+							if(response.items){
+								$('#defContainer').empty();
+								formattedImages = []; //Empty both the DOM context and the image array in case we're reperforming search
+								$.each(response.items, function(index, value) {
+									var imgUrl = value.link,
+										refIndex = 'ref'+index;//create an index that is not just a number so the splice method (used later) does not interpret the target record by position instead of index name
+									formattedImages.push({
+										index: refIndex,
+										imgUrl: imgUrl
+									});
 								});
-							});
-							console.log("these is how the images were saved: ", formattedImages);
-							$.each(formattedImages, function(index, value) {
-								var imgUrl = value.imgUrl,
-									refIndex = value.index,
-									imageMarkup = $('<li id="'+refIndex+'"><div></div><img src="'+imgUrl+'"/></li>'); //this is wrapped in a $(...) to make it an object, instead of a string, so we can traverse through it
-									imageMarkup.find('img') //before adding the element to the DOM, check to see if its request gets an error
-										.on('error', function(e){
-											$(this).parent().remove();
-											formattedImages.splice(index, 1); //also remove it from the formattedImages array
-										});
-								$('#defContainer').append(imageMarkup);
-							});
+								console.log("so how many images are saved? ", formattedImages.length);
+								$.each(formattedImages, function(index, value) {
+									var imgUrl = value.imgUrl,
+										refIndex = value.index,
+										imageMarkup = $('<li id="'+refIndex+'"><div></div><img src="'+imgUrl+'"/></li>'); //this is wrapped in a $(...) to make it an object, instead of a string, so we can traverse through it
+										imageMarkup.find('img') //before adding the element to the DOM, check to see if its request gets an error
+											.on('error', function(e){
+												$(this).parent().remove();
+												formattedImages.splice(index, 1); //also remove it from the formattedImages array
+											});
+									$('#defContainer').append(imageMarkup);
+								});
+							} else {
+								var noResultsMarkup = $("<div id='noResults'><h1>Sorry!</h1><p>It looks like we're not ready to define that term yet. Maybe try refining the term by clicking on it, or click below to through away this term.</p></div>");
+								$('#defContainer').empty().append(noResultsMarkup);
+								$('#contextContainer').children().slideUp(300, function(){
+									$(this).remove();
+								});;
+							}
 							//Finally, execute the regular jQuery actions
 							$('#container').trigger('regJQ');
 						},
@@ -215,8 +222,13 @@
 						})
 						.children('.term')
 						.editable(function(value, settings) { 
-							term = value;
-							console.log("New search term: ", term);
+							var newTerm = value;
+							if(newTerm != term){ //check to see if anything actually changed
+								term = newTerm;
+								query = encodeURI(term);
+								console.log("Reperforming search. New search term: ", term);
+								$('#container').trigger('findContext');
+							}
 							return(value);
 						}, {	 						
 							 type     : 'autogrow',
@@ -249,7 +261,7 @@
 	<body>
 		<div id="navigation">
 			<li><a href="#" class="active">Contribute</a></li>
-			<li><a id="goToSearch">Search</a></li>
+			<li><a id="openSearch">Search</a></li>
 			<li><a href="#">View Current Dictionary</a></li>
 			<li><a id="openAbout">About</a></li>
 			<form id="search">
@@ -274,6 +286,11 @@
 			</div>
 			<div id="closeAbout">Close ↑</div>
 		</div>
+		<div id="searchPanel">
+			<h1>Search for existing terms:</h1>
+			<form id="search"><input type="text" name="searchTerm" placeholder="Enter your search terms here." /> <input type="submit" name="submitSearch" value="Go!" /></form>
+			<div id="closeSearch">Close ↑</div>
+		</div>
 		<div id="container">
 			<header>
 				<a href="index.php"><img src="images/logo.png" /></a>
@@ -285,6 +302,7 @@
 					<div id="termContainer">
 						<div class="term"></div>
 					</div>
+					<div class="clear"></div>
 				</section>
 				<form id="defSubmission" action="">
 					<section id="entry">
