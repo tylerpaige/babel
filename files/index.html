@@ -185,13 +185,20 @@
 								$('#defContainer').empty().append(noResultsMarkup);
 								$('#contextContainer').children().slideUp(300, function(){
 									$(this).remove();
-								});;
+								});
 							}
 							//Finally, execute the regular jQuery actions
 							$('#container').trigger('regJQ');
 						},
 						error:function(error){
 							console.log(error);
+							var searchError = $("<div id='noResults'><h1>Our Search Engines Are Tired</h1><p>Sorry, we've exceeded the number of searches we can perform today. You can still view the current dictionary, though.</p></div>");
+							$('#defContainer').empty().append(searchError);
+							$('#instruction').fadeOut(1000, function(){$(this).remove();});
+							$('#decision').fadeOut(1000, function(){$(this).remove();});
+							$('#entry').children('.removeWhenError').fadeOut(1000, function(){$(this).remove();});
+							$('#entry').children('h2').fadeOut(1000, function(){$(this).remove();});
+							$('#contextContainer').fadeOut(1000, function(){$(this).remove();});
 						}
 					});
 				});
@@ -297,7 +304,7 @@
 				<span class="tagline">A dictionary for panhuman image-based language</span>
 			</header>
 			<article id="content">
-				<section id="instruction">
+				<section id="instruction" class="removeWhenError">
 					<p>Help define this symbol:</p>
 					<div id="termContainer">
 						<div class="term"></div>
@@ -306,16 +313,16 @@
 				</section>
 				<form id="defSubmission" action="">
 					<section id="entry">
-						<p>Click to remove images that do not define the above term.</p>
+						<p class="removeWhenError">Click to remove images that do not define the above term.</p>
 						<ol id="defContainer">
 							
 						</ol>
-						<h2>Usage & Context:</h2>
+						<h2 class="removeWhenError">Usage & Context:</h2>
 						<ol id="contextContainer">
 							
 						</ol>
 					</section>
-					<section id="decision">
+					<section id="decision" class="removeWhenError">
 						<div id="accept">
 							<a class="accept" href="#">Accept this definition</a>
 						</div>
