@@ -25,6 +25,7 @@
 					"appID":"heroku_app7962868",
 					"apiKey":"5089c368e4b0a116b09053b1"
 				});
+				mongoUtil.getRecent();
 				//About drawer code
 				$('#about').hide();//first keep #about hidden
 				var closeAbout = function(){ //then define a function to close the about panel
@@ -50,6 +51,8 @@
 						closeSearch();
 					}
 				});
+				$('#closeSearch').click(function() { closeSearch(); });
+				
 				$('#query').focus(function() {
 					$('#query').animate({width: '100%'}, 500);
 				}).blur(function() {
@@ -244,24 +247,11 @@
 				});
 				$('#accept').click(function() {
 					//Save image definitions
-					$.each(formattedImages,	function (index, value) {
-						var imgUrl = value.imgUrl,
-							data = [term, imgUrl];
-						mongoUtil.post("definition", data, function(){
+					var data = {'term':term, 'images':formattedImages, 'context':contextTweets};
+					mongoUtil.post("definition", data, function(){
 							console.log(data);
-						}); 
-					});
-					//Save tweet contexts&usages
-					$.each(contextTweets, function (index, value) {
-						var text = value.text,
-							url = value.url,
-							data = [term, text, url];
-						mongoUtil.post("context", data, function(){
-							console.log(data);
-						}); 
-					});
+					}); 
 				});
-				
 			});
 		</script>
 	</head>
@@ -284,13 +274,7 @@
 				<p>Later, the dictionary can be viewed.</p>
 				<p>This, of course, is entirely gratuitous, as there is no need for a dictionary for a language of this sort.</p>
 			</div>
-			<div id="mostRecent">
-				<a>◉౪◉s</a>
-				<a>(́◕◞౪◟◕‵)</a>
-				<a>( ☞◔ ౪◔)☞</a>
-				<a>▂▅▇█▓▒░◉◞౪◟◉░▒▓█▇▅▂</a>
-				<a>ʅ(◔౪◔)ʃ</a>
-			</div>
+			<div id="mostRecent"></div>
 			<div id="closeAbout">Close ↑</div>
 		</div>
 		<div id="searchPanel">

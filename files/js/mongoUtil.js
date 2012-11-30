@@ -35,7 +35,7 @@ var mongoUtil = {
 
 		});				
 	},
-	get: function(id, callback) {
+	getRecent: function(id, callback) {
 		$.ajax({
 
 			url:this.url(),
@@ -43,14 +43,48 @@ var mongoUtil = {
 			contentType:'application/json',
 			type:'GET',
 			success:function(response){
-
-				console.log("success",response);
-				$("<h2>"+response.length+"</h2>").appendTo("h1");
+				console.log("recent terms: ", response);
+				var terms = [];
+				$.each(response, function(index, value) {
+					var term = value.entry.term;
+					terms.push(term);
+				});
+				var mostRecent = terms.length,
+					lastRecent = mostRecent - 5,
+					recentTerms = terms.slice(lastRecent, mostRecent);
+				console.log(recentTerms);
+				$.each(recentTerms, function(index, value) {
+					var recentMarkup = $('<a>'+value+'</a>');
+					console.log("each individual term: ", recentMarkup);
+					$('#mostRecent').append(recentMarkup);
+				});
 			},
-			error: function(error) {
-				console.log("failure",error);
+			error:function(error){
+				console.log(error);
 			}
-
+		});
+	},
+	getDictionary: function(id, callback) {
+		$.ajax({
+			url:this.url(),
+			dataType:'json',
+			contentType:'application/json',
+			type:'GET',
+			success:function(response){
+				console.log("recent terms: ", response);
+				var terms = [];
+				$.each(response, function(index, value) {
+					var term = value.entry.term;
+					terms.push(term);
+				});
+				$.each(terms, function(index, value) {
+					var termListingMarkup = $('<a href="#"><li>'+value+'</li></a>');
+					$('#list').prepend(termListingMarkup);
+				});
+			},
+			error:function(error){
+				console.log(error);
+			}
 		});
 	}
 };
