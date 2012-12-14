@@ -78,9 +78,10 @@ var mongoUtil = {
 					terms.push(term);
 				});
 				$.each(terms, function(index, value) {
-					var termListingMarkup = $('<a href="#"><li>'+value+'</li></a>');
+					var termListingMarkup = $('<a href="#" id="'+value+'"><li>'+value+'</li></a>');
 					$('#list').prepend(termListingMarkup);
 				});
+				$('#container').trigger('clickFunctions');
 			},
 			error:function(error){
 				console.log(error);
